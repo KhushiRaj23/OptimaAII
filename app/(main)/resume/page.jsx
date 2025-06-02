@@ -1,6 +1,9 @@
-
 import { getResume } from "@/actions/resume"
 import ResumeBuilder from "./_components/resume-builder";
+
+// Add dynamic configuration
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 const ResumePage = async() => {
 
