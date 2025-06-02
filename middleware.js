@@ -6,6 +6,7 @@ const isProctedRoute= createRouteMatcher([
    "/resume(.*)",
    "/ai-cover-letter(.*)",
    "/onboarding(.*)",
+   "/interview(.*)"
 ]);
 export default clerkMiddleware(async(auth,req)=>{
   const {userId}= await auth()
