@@ -19,7 +19,9 @@ const nextConfig = {
     },
     // Add experimental features for better server component handling
     experimental: {
-        serverActions: true,
+        serverActions: {
+            allowedOrigins: ['localhost:3000', 'vercel.app'],
+        },
     },
 };
 
