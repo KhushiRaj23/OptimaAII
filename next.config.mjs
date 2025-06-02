@@ -17,6 +17,10 @@ const nextConfig = {
         CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
         GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
     },
+    // Add experimental features for better server component handling
+    experimental: {
+        serverActions: true,
+    },
 };
 
 export default nextConfig;

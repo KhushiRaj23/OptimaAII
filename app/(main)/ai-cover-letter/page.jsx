@@ -1,9 +1,12 @@
-
 import { getCoverLetters } from "@/actions/cover-letter";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CoverLetterList from "./_components/cover-letter-list";
+
+// Add dynamic configuration
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function CoverLetterPage() {
   let coverLetters = [];
