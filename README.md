@@ -114,6 +114,16 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to view the 
 
 ---
 ### Project Snapshots
+## HomePage
+![HomePage](https://github.com/user-attachments/assets/96ccc092-0be8-40bf-be35-d0e4b5413872)
+
+
+## Interview Prep Dashboard
+![interview](https://github.com/user-attachments/assets/02db7c85-a79b-4794-818d-4034cc868c64)
+
+
+## Industrial Insights
+![screencapture-optima-aii-vercel-app-dashboard-2025-06-03-14_29_40](https://github.com/user-attachments/assets/684f0ab3-2f51-491a-b7c3-55e0d540f7a6)
 
 ---
 ## Deployment
