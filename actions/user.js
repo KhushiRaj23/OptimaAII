@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { generateAIsights } from "./dashboard";
 
 
@@ -14,7 +14,34 @@ export const updateUser=async (data)=>{
             where: { clerkUserId: userId },
         });
 
-        if (!user) return { success: false, error: "User not found in database." };
+        let user = await db.user.findUnique({
+    where: { clerkUserId: userId },
+});
+
+if (!user) {
+    const clerkUser = await currentUser();
+
+    if (!clerkUser) {
+        return { success: false, error: "Clerk user not found." };
+    }
+
+    const email = clerkUser.emailAddresses?.[0]?.emailAddress;
+
+    if (!email) {
+        return { success: false, error: "No email found for Clerk user." };
+    }
+
+    user = await db.user.create({
+        data: {
+            clerkUserId: userId,
+            email: email,
+            name: clerkUser.fullName || clerkUser.firstName || "User",
+            imageUrl: clerkUser.imageUrl || "",
+        },
+    });
+
+    console.log("Created new database user:", user);
+}
 
         console.log("Received Data in updateUser:", data);
 
