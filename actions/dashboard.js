@@ -5,11 +5,11 @@ import { auth } from "@clerk/nextjs/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI= new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-console.log("✅ Loaded Gemini API Key:", process.env.GEMINI_API_KEY);
+console.log("✅ Gemini API Key loaded:", !!process.env.GEMINI_API_KEY);
 
-const model=genAI.getGenerativeModel({
-    model: "gemini-1.5-flash",
-})
+const model = genAI.getGenerativeModel({
+    model: "gemini-2.5-flash",
+});
 export const generateAIsights=async (industry)=>{
     if (!industry || typeof industry !== "string" || industry.trim() === "") {
         throw new Error("Please select a valid industry before generating insights.");
