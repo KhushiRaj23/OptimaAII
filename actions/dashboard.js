@@ -10,73 +10,79 @@ console.log("✅ Gemini API Key loaded:", !!process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({
     model: "gemini-3.5-flash",
 });
-export const generateAIsights=async (industry)=>{
-    if (!industry || typeof industry !== "string" || industry.trim() === "") {
-        throw new Error("Please select a valid industry before generating insights.");
-      }
-      
-      const prompt = `
-  Analyze the current state of the ${industry} industry and provide insights in ONLY the following JSON format without any additional notes or explanations:
-  {
-    "salaryRanges": [
-      { "role": "string", "min": number, "max": number, "median": number, "location": "string" }
-    ],
-    "growthRate": number,
-    "demandLevel": "High" | "Medium" | "Low",
-    "topSkills": ["skill1", "skill2"],
-    "marketOutlook": "Positive" | "Neutral" | "Negative",
-    "keyTrends": ["trend1", "trend2"],
-    "recommendedSkills": ["skill1", "skill2"]
+
+
+export const generateAIsights = async (industry) => {
+  if (!industry || typeof industry !== "string" || industry.trim() === "") {
+    throw new Error("Please select a valid industry before generating insights.");
   }
 
-  IMPORTANT:
-  - Populate the JSON fields with realistic values specific to the "${industry}" industry.
-  - Include at least 5 job roles in "salaryRanges" with realistic salary numbers and locations.
-  - "growthRate" must be a percentage between 0 and 20.
-  - Fill in at least 5 "topSkills" and 5 "keyTrends".
-  - "recommendedSkills" should align with the current job market.
-  - Return ONLY the JSON object. Do NOT include markdown or explanations.
+  const prompt = `
+Analyze the current state of the ${industry} industry and provide insights in ONLY the following JSON format without any additional notes or explanations:
+
+{
+  "salaryRanges": [
+    {
+      "role": "string",
+      "min": number,
+      "max": number,
+      "median": number,
+      "location": "string"
+    }
+  ],
+  "growthRate": number,
+  "demandLevel": "High" | "Medium" | "Low",
+  "topSkills": ["skill1", "skill2"],
+  "marketOutlook": "Positive" | "Neutral" | "Negative",
+  "keyTrends": ["trend1", "trend2"],
+  "recommendedSkills": ["skill1", "skill2"]
+}
+
+IMPORTANT:
+
+- Populate the JSON fields with realistic values specific to the "${industry}" industry.
+- Include at least 5 job roles in "salaryRanges" with realistic salary numbers and locations.
+- "growthRate" must be a percentage between 0 and 20.
+- Fill in at least 5 "topSkills" and 5 "keyTrends".
+- "recommendedSkills" should align with the current job market.
+- Return ONLY the JSON object. Do NOT include markdown or explanations.
 `;
 
-      
+  console.log("Prompt sent to Gemini:\n", prompt);
 
-        console.log("Prompt sent to Gemini:\n", prompt);
+  try {
+    const result = await model.generateContent(prompt);
 
-        const result=await model.generateContent(prompt);
+    // IMPORTANT: use result.response
+    const responseText = result?.response?.text?.() || "";
 
-        const responseText= result?.candidates?.[0]?.content?.parts?.[0]?.text || "";
-        console.log("🔍 Raw Gemini Output:", responseText);
+    console.log("🔍 Raw Gemini Output:", responseText);
 
-        if (!responseText || responseText.trim() === "") {
-            throw new Error("Gemini AI returned an empty or invalid response.");
-        }
+    if (!responseText.trim()) {
+      console.error("Full Gemini result:", result);
+      throw new Error("Gemini AI returned an empty response.");
+    }
 
-        // Improved JSON extraction
-        const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
 
-        if (!jsonMatch) {
-            console.error("Could not find JSON object in AI response:", responseText);
-            throw new Error("AI response did not contain a valid JSON object.");
-        }
+    if (!jsonMatch) {
+      console.error("Could not find JSON object:", responseText);
+      throw new Error("AI response did not contain a valid JSON object.");
+    }
 
-        const jsonString = jsonMatch[0]
-        console.log("Attempting to parse JSON string:", jsonString);
+    const cleanedJsonString = jsonMatch[0]
+      .replace(/,\s*}/g, "}")
+      .replace(/,\s*]/g, "]");
 
-        // Original cleaning (might still be useful, but less critical with extraction)
-        const cleanedJsonString = jsonString
-        .replace(/,\s*}/g, "}")
-        .replace(/,\s*]/g, "]");
+    return JSON.parse(cleanedJsonString);
 
-
-        try {
-            return JSON.parse(cleanedJsonString);
-        } catch (error) {
-            console.error("Error parsing AI-generated JSON:", cleanedJsonString);
-            throw new Error("Invalid JSON format received from AI.");
-        }
+  } catch (error) {
+    console.error("❌ Gemini generation failed:", error);
+    throw error;
+  }
+};
 
 
-    };
 export async function getIndustryInsights(){
      const {userId}=await auth();
         if(!userId) throw new Error("Unauthorized");
