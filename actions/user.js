@@ -10,10 +10,6 @@ export const updateUser=async (data)=>{
         const { userId } = await auth();
         if (!userId) return { success: false, error: "Unauthorized: No user ID found." };
 
-        const user = await db.user.findUnique({
-            where: { clerkUserId: userId },
-        });
-
         let user = await db.user.findUnique({
     where: { clerkUserId: userId },
 });
