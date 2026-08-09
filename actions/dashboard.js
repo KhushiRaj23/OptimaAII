@@ -8,7 +8,7 @@ const genAI= new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 console.log("✅ Gemini API Key loaded:", !!process.env.GEMINI_API_KEY);
 
 const model = genAI.getGenerativeModel({
-    model: "gemini-2.5-flash",
+    model: "gemini-3.5-flash",
 });
 export const generateAIsights=async (industry)=>{
     if (!industry || typeof industry !== "string" || industry.trim() === "") {
