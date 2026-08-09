@@ -22,25 +22,32 @@ if (!user) {
     const clerkUser = await currentUser();
 
     if (!clerkUser) {
-        return { success: false, error: "Clerk user not found." };
+        return {
+            success: false,
+            error: "Clerk user not found.",
+        };
     }
 
     const email = clerkUser.emailAddresses?.[0]?.emailAddress;
 
     if (!email) {
-        return { success: false, error: "No email found for Clerk user." };
+        return {
+            success: false,
+            error: "No email found for Clerk user.",
+        };
     }
 
     user = await db.user.create({
         data: {
             clerkUserId: userId,
-            email: email,
+            email,
             name: clerkUser.fullName || clerkUser.firstName || "User",
-            imageUrl: clerkUser.imageUrl || "",
+            imageUrl: clerkUser.imageUrl || null,
+            skills: [],
         },
     });
 
-    console.log("Created new database user:", user);
+    console.log("Created new database user:", user.id);
 }
 
         console.log("Received Data in updateUser:", data);
