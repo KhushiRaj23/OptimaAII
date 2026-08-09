@@ -1,6 +1,6 @@
 # OptimAI - Career Guide
 This project is an all-in-one career development platform built with **Next.js** and **Prisma**. It offers users a comprehensive environment to practice and improve their skills through quizzes and a performance dashboard that provides **real-time AI-powered suggestions**. Beyond practice, the platform enables users to create, enhance, and download professional **resumes** and **cover letters** with the assistance of AI. Additionally, it features an industrial insights dashboard to keep users informed about current trends and opportunities, helping them prepare effectively for their careers.  
-
+Database region migration .
 ## Table of Contents
 
 - Project Overview
